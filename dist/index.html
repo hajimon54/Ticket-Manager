@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="js/bootstrap.bundle.js"></script> -->
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+
+    <h1 class="main-title text-center ">Ticket management system</h1>
+
+    <div class="ticket-data border border-5 ">
+
+      <section class="ticket-count">
+
+        <h1> Support ticket count</h1>
+
+        <div class="pie-chart">
+          <canvas id="myChart" ></canvas>
+        </div>
+
+      </section>
+
+      <section class="open-tickets">
+
+        <section class="containers">
+        <h1> Open Tickets</h1>
+        
+
+          <p class="fs-1"id="openTickets">0</p>
+       
+
+      </section>
+
+      </section>
+
+      <div class="ticket-priority">
+        
+
+        <section class="containers">
+          <h1>High Priority tickets</h1>
+          
+  
+          
+            <p class="fs-1" id="highPriorityTickets">0</p>
+          
+  
+        </section>
+      </div>
+    </div>
+
+
+    <div class="searchFilterBoxContainer">
+      <div class="searchFilterBox">
+        <label for="">Search for ticket: </label>
+        <input type="text" id="mySearchFieldInput"  placeholder="Type in ticket details..." title="Type in a ticket title">
+      </div>
+    </div>
+
+
+
+    <div  class="ticketContainer">
+    <div class="ticket-table">
+      <div class="scrollit">
+    <table id="myTable" class="table table-dark table-hover ">
+      <div class="header">
+      <thead class="thead">      
+        <tr>
+          <th class="text-center">Status
+            <select id="statusDropdown" class="btn btn-secondary btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false" selected="selected">
+            <option value="All">All</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Escalate">Escalate</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </th>
+          <th><span class="ref">Reference</span></th>
+          <th><span class="title">Title</span></th>
+          <th><span class="priority">Priority <select id="priorityStatus" class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" selected="selected">
+              <option value="All">All</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </span>
+          </th>
+          <th><span class="created">Created</span></th>
+          <th><span class="name">Name</span></th>
+          <th><span class="email">Email</span></th>
+          <th><span class="created">Assignee</span></th>
+        </tr>
+      </thead> 
+    </div>
+      <tbody id="tableData"></tbody>
+    </table> 
+    </div>
+    <!-- <tbody class="" id="tableData"></tbody> -->
+  </div>
+</div>
+
+  <div class="button-group">
+    <!-- Button trigger modal adding new ticket-->
+    <button type="button" class=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Submit New Ticket
+    </button>
+
+    <!-- Button trigger modal deleting ticket-->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropDelBtn">
+      Delete Ticket
+    </button>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropUpdtBtn">
+      Update Ticket
+    </button>
+
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdropUpdtBtn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Update Ticket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body-update-form">
+        <form method="post" id="updtticketForm">
+          <div>
+            <label for="html">Ticket status</label>
+          </div>
+          <div>
+          <div class="btn-group">
+            <select id="updtTktStatus" class="m-1 font-weight-bold rounded text-center apTicketStatus mr-2 no-outline col-4 d-inline form-control border apTicketStatusColor border-danger text-danger" name="internalStatus">
+              <option class="font-weight-bold " value="Open">Open</option>
+              <option class="font-weight-bold " value="In Progress">In Progress</option>
+              <option class="font-weight-bold " value="On Hold">On Hold</option>
+              <option class="font-weight-bold " value="Escalate">Escalate</option>
+              <option class="font-weight-bold " value="Closed">Closed</option>
+          </select>
+          </div>
+        </div>
+        <div>
+          <label for="html">Reference</label>
+          </div>
+        <input
+          type="text"
+          name="reference"
+          id="updtTktReference"
+          for="html"
+          placeholder="Enter ticket reference here..."
+        />
+        <div>
+          <div>
+            <label for="html">Ticket title</label>
+            </div>
+          <input
+            type="text"
+            name="ticket title"
+            id="updtTicketTitle"
+            for="html"
+            placeholder="Enter ticket title here..."
+          />
+        </div>
+        <div>
+          <label for="html">Priority</label>
+          </div>
+        <div class="btn-group">
+          <select id="updtTicketPriority" class=" font-weight-bold rounded text-center apTicketStatus mr-2 no-outline col-4 d-inline form-control border apTicketStatusColor border-danger text-danger" name="internalStatus">
+            <option class="font-weight-bold " value="High">High</option>
+            <option class="font-weight-bold " value="Medium">Medium</option>
+            <option class="font-weight-bold " value="Low">Low</option>
+        </select>
+      </div>
+      <div>
+        <div>
+          <div>
+            <label for="html">Name</label>
+            </div>
+          <input
+            type="text"
+            name="name"
+            id="updtTicketName"
+            for="html"
+            placeholder="Enter Name here"
+          />
+        </div>
+      </div>
+      <div>
+        <div>
+          <label for="html">Email Address</label>
+          </div>
+        <input
+          type="text"
+          name="email address"
+          id="updtEmailAddress"
+          for="html"
+          placeholder="Enter email address here..."
+        />
+      </div>
+      <div>
+        <div>
+          <label for="html">Assignee</label>
+          </div>
+        <input
+          type="text"
+          name="Assignee"
+          id="updtAssignee"
+          for="html"
+          placeholder="Enter assignee here..."
+        />
+      </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="updtBtn" type="button" class="btn btn-primary">Update Document</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdropDelBtn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Delete Document</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="deleteDocForm">
+        <div>
+          <label for="html">Document Reference</label>
+          </div>
+          <input
+                type="text"
+                name="reference"
+                id="reference"
+                class=""
+                placeholder="Enter Document Reference here..."
+                required
+              />
+      </div>
+    </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="delBtn" type="button" class="btn btn-primary">Delete Document</button>
+      </div>
+    </div>
+  </div>
+</div> 
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Add New Ticket
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" id="ticketForm">
+              <div>
+                <label for="html">Ticket status</label>
+              </div>
+              <div>
+              <div class="btn-group">
+                <select id="ticketStatus" class="m-1 font-weight-bold rounded text-center apTicketStatus mr-2 no-outline col-4 d-inline form-control border apTicketStatusColor border-danger text-danger" name="internalStatus">
+                  <option class="font-weight-bold " value="Open">Open</option>
+                  <option class="font-weight-bold " value="In Progress">In Progress</option>
+                  <option class="font-weight-bold " value="On Hold">On Hold</option>
+                  <option class="font-weight-bold " value="Escalate">Escalate</option>
+                  <option class="font-weight-bold " value="Closed">Closed</option>
+              </select>
+              </div>
+            </div>
+            <div>
+              <div>
+                <label for="html">Document Reference</label>
+                </div>
+              <input
+                type="text"
+                name="docReference"
+                id="docReference"
+                class=""
+                placeholder="Enter Document Reference Here..."
+              />
+            </div>
+            <div>
+              <div>
+                <label for="html">Reference</label>
+                </div>
+              <input
+                type="text"
+                name="reference"
+                id="reference"
+                class=""
+                placeholder="Enter ticket reference here..."
+              />
+            </div>
+            <div>
+              <div>
+                <label for="html">Ticket title</label>
+                </div>
+              <input
+                type="text"
+                name="tickeTitle"
+                id="ticketTitle"
+                class=""
+                placeholder="Enter ticket title here..."
+              />
+            </div>
+            <div>
+              <div>
+                <label for="html">Priority</label>
+                </div>
+              <div class="btn-group">
+                <select id="priority" class=" font-weight-bold rounded text-center apTicketStatus mr-2 no-outline col-4 d-inline form-control border apTicketStatusColor border-danger text-danger" name="internalStatus">
+                  <option class="font-weight-bold " value="High">High</option>
+                  <option class="font-weight-bold " value="Medium">Medium</option>
+                  <option class="font-weight-bold " value="Low">Low</option>
+              </select>
+             </div>
+             <div>
+              <div>
+                <label for="html">Time Created</label>
+                </div>
+              <input
+                type="text"
+                name="time created"
+                id="timeCreated"
+                class=""
+                placeholder="Date and Time Created"
+              />
+            </div>
+            <div>
+              <div>
+                <div>
+                  <label for="html">Name</label>
+                  </div>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class=""
+                  placeholder="Enter Name here"
+                />
+              </div>
+            </div>
+            <div>
+              <div>
+                <label for="html">Email Address</label>
+                </div>
+              <input
+                type="text"
+                name="email address"
+                id="emailAddress"
+                class=""
+                placeholder="Enter email address here..."
+              />
+            </div>
+            <div>
+              <div>
+                <label for="html">Assignee</label>
+                </div>
+              <input
+                type="text"
+                name="Assignee"
+                id="Assignee"
+                for="html"
+                placeholder="Enter assignee here..."
+              />
+            </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Close
+            </button>
+            <button name="submitForm" id="submitForm"  type="button" class="btn btn-primary">Submit ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>   
+    <script src="main.js"></script>
+  </body>
+</html>
