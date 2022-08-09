@@ -53,7 +53,7 @@ async function ticketRef(db) {
   });
 
   let table = "<table>";
-  let thead = "<thead>";
+
   // thead += `<tr>
   // <th><span class="text-center">Status</span></th>
   // <th><span class="ref">Reference</span></th>
@@ -76,7 +76,6 @@ async function ticketRef(db) {
     table += `</tr>`;
   });
 
-  thead += "</thead>";
   table += "</table>";
   //const tableJoined = thead + table;
   tableData.setAttribute("class", "table table-dark table-hover rounded-3");
@@ -121,7 +120,7 @@ async function ticketRef(db) {
         ticketTitle: document.querySelector("#ticketTitle").value,
         Priority: document.querySelector("#priority").value,
         Created: new Date().toLocaleString(),
-        Name: document.querySelector("#name").value,
+        fullName: document.querySelector("#fullName").value,
         Email: document.querySelector("#emailAddress").value,
         Assignee: document.querySelector("#Assignee").value,
       },
