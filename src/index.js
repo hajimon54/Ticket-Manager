@@ -248,7 +248,7 @@ async function ticketRef(db) {
       Priority: document.querySelector("#updtTicketPriority").value,
       Name: document.querySelector("#updtTicketName").value,
       Email: document.querySelector("#updtEmailAddress").value,
-      Assignee: document.querySelector("#updtAssignee").value,
+      Developer: document.querySelector("#updtAssignee").value,
     })
       .then(() => {
         alert("The document has been deleted successfully");
