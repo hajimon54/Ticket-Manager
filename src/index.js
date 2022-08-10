@@ -52,7 +52,34 @@ async function ticketRef(db) {
     tickets.push(doc);
   });
 
-  let table = "<table>";
+  // const table = document.getElementById("tableData");
+
+  // const create = (tag = "div", options = {}) =>
+  //   Object.assign(document.createElement(tag), options);
+
+  // table.append(
+  //   ...tickets.map((ticket) => {
+  //     const row = create("tr");
+  //     const checkBoxCell = create("td", { className: "text-center" });
+  //     const checkBoxLabel = create("label");
+  //     checkBoxLabel.append(
+  //       create("input", {
+  //         type: "checkbox",
+  //         className: "form-check-input", // You were creating duplicate `ids`
+  //       }),
+  //       create("span", { textContent: ticket.id })
+  //     );
+  //     checkBoxCell.append(checkBoxLabel);
+  //     const cells = tickets.map((a, field) =>
+  //       create("td", {
+  //         textContent: a.data()[field],
+  //         className: "text-center",
+  //       })
+  //     );
+  //     cells.splice(1, 0, checkBoxCell);
+  //     row.append(...cells);
+  //   })
+  // );
 
   // thead += `<tr>
   // <th><span class="text-center">Status</span></th>
@@ -63,10 +90,13 @@ async function ticketRef(db) {
   // <th><span class="name">Name</span></th>
   // <th><span class="email">Email</span></th></tr>`;
 
+  let table = "<table>";
   tickets.forEach((a) => {
     table = table + `<tr>`;
     table = table + `<td class ="text-center">${a.data().Status}</td>`;
-    table = table + `<td class ="text-center">${a.id}</td>`;
+    table =
+      table +
+      `<td class ="text-center"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">${a.id}</td>`;
     table = table + `<td class ="text-center">${a.data().ticketTitle}</td>`;
     table = table + `<td class ="text-center">${a.data().Priority}</td>`;
     table = table + `<td class ="text-center">${a.data().Created}</td>`;
@@ -205,6 +235,7 @@ async function ticketRef(db) {
 
   const deleteTicketEntry = document.querySelector("#reference");
   let delBtn = document.querySelector("#delBtn");
+
   delBtn.addEventListener("click", async (e) => {
     e.preventDefault();
 
@@ -214,7 +245,9 @@ async function ticketRef(db) {
     let rootRef = collection(db, "Ticket-table");
     // get a reference to the document
     let docRef = doc(rootRef, deleteTicketEntry.value);
+
     //delete the document
+
     deleteDoc(docRef)
       .then(() => {
         alert("The document has been deleted successfully");
@@ -309,34 +342,6 @@ async function ticketRef(db) {
       }
     });
 
-  // document
-  //   .getElementById("mySearchFieldInput")
-  //   .addEventListener("keyup", () => {
-  //     // Declare variables
-  //     var input, filter, table, tr, td, i, txtValue;
-  //     input = document.getElementById("mySearchFieldInput");
-  //     filter = input.value;
-  //     table = document.getElementById("myTable");
-  //     tr = table.getElementsByTagName("tr");
-
-  //     // Loop through all table rows, and hide those who don't match the search query
-  //     for (i = 0; i < tr.length; i++) {
-  //       td = tr[i].getElementsByTagName("td");
-
-  //       if (td) {
-  //         txtValue = td.textContent || td.innerText;
-  //         console.log(txtValue);
-  //         if (txtValue.indexOf(filter) > -1) {
-  //           tr[i].style.display = "";
-  //         } else {
-  //           tr[i].style.display = "none";
-  //         }
-  //       }
-
-  //       console.log(txtValue);
-  //     }
-  //   });
-
   document
     .getElementById("mySearchFieldInput")
     .addEventListener("keyup", function (e) {
@@ -365,6 +370,39 @@ async function ticketRef(db) {
         }
       }
     });
+
+  // Step 1. Get a list of documents that exist.
+  // Step 2. From that list of documents, transform it to a list if IDs
+  // Step 3. Dynamically create checkboxes based on the number of IDs
+  // Step 4. In an event, get all the IDs that have been checked
+  // Step 5. Submit this list to your back-end
+  // Step 6. Delete the submitted ids.
+
+  let checkBox = document.getElementById("flexCheckDefault");
+  const checkBoxRef = tickets.map((a) => a.id);
+
+  console.log(checkBoxRef);
+
+  // delBtn.addEventListener("click", async (e) => {
+  //   e.preventDefault();
+
+  //   //query the database for the ticket id
+  //   let r = await getDoc(doc(db, "Ticket-table/", deleteTicketEntry.value));
+  //   //get root reference
+  //   let rootRef = collection(db, "Ticket-table");
+  //   // get a reference to the document
+  //   let docRef = doc(rootRef, deleteTicketEntry.value);
+
+  //   //delete the document
+
+  //   deleteDoc(docRef)
+  //     .then(() => {
+  //       alert("The document has been deleted successfully");
+  //     })
+  //     .catch(() => {
+  //       alert("Unsuccessful operation: " + error);
+  //     });
+  // });
 }
 ticketRef(db);
 
