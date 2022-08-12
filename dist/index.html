@@ -68,10 +68,26 @@
 
 
     <div class="searchFilterBoxContainer">
+
+        
+
+
+
       <div class="searchFilterBox">
         <label for="">Search for ticket: </label>
         <input type="text" id="mySearchFieldInput"  placeholder="Type in ticket details..." title="Type in a ticket title">
       </div>
+
+      <div class="deleteMultipleDocs">
+        <label for="">Type in ticket ref: </label>
+        <input type="text" id="delMultipleDocs"  placeholder="Type in ticket ref..." title="Type in a ticket ref">
+      </div>
+
+      <button id="deleteMultipleDocs" type="button" class="btn btn-primary">
+        Delete Multiple Tickets
+      </button>
+
+
     </div>
 
 
@@ -92,6 +108,9 @@
             <option value="On Hold">On Hold</option>
             <option value="Closed">Closed</option>
           </select>
+          <th>
+            <span class="chkBox">Check Box</span>
+          </th>
         </th>
           <th><span class="ref">Reference</span></th>
           <th><span class="title">Title</span></th>

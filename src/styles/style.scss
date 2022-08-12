@@ -167,6 +167,11 @@ tbody tr {
   gap: 30px;
 }
 
+.searchFilterBoxContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 span {
   display: flex;
   justify-content: center;

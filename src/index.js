@@ -22,6 +22,7 @@ import {
   deleteDoc,
   updateDoc,
   orderBy,
+  writeBatch,
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
@@ -45,42 +46,53 @@ const db = getFirestore(app);
 
 async function ticketRef(db) {
   let r = await getDocs(collection(db, "Ticket-table"));
-  let tableData = document.querySelector("#tableData");
+  let tableData = document.getElementById("tableData");
 
   let tickets = [];
   r.forEach((doc) => {
     tickets.push(doc);
   });
 
-  // const table = document.getElementById("tableData");
+  console.log(tickets);
 
-  // const create = (tag = "div", options = {}) =>
-  //   Object.assign(document.createElement(tag), options);
+  const table = document.getElementById("tableData");
 
-  // table.append(
-  //   ...tickets.map((ticket) => {
-  //     const row = create("tr");
-  //     const checkBoxCell = create("td", { className: "text-center" });
-  //     const checkBoxLabel = create("label");
-  //     checkBoxLabel.append(
-  //       create("input", {
-  //         type: "checkbox",
-  //         className: "form-check-input", // You were creating duplicate `ids`
-  //       }),
-  //       create("span", { textContent: ticket.id })
-  //     );
-  //     checkBoxCell.append(checkBoxLabel);
-  //     const cells = tickets.map((a, field) =>
-  //       create("td", {
-  //         textContent: a.data()[field],
-  //         className: "text-center",
-  //       })
-  //     );
-  //     cells.splice(1, 0, checkBoxCell);
-  //     row.append(...cells);
-  //   })
-  // );
+  const create = (tag = "div", options = {}) =>
+    Object.assign(document.createElement(tag), options);
 
+  table.append(
+    ...tickets.map((ticket) => {
+      const row = create("tr");
+      // const checkBoxCell = create("td", { className: "text-center" });
+      // const checkBoxLabel = create("label");
+
+      // checkBoxLabel.append(
+      //   create("input", {
+      //     type: "checkbox",
+      //     className: "form-check-input", // You were creating duplicate `ids`
+      //   }),
+      //   create("span", { textContent: ticket.id })
+      // );
+
+      // checkBoxCell.append(checkBoxLabel);
+
+      //console.log(a.data());
+
+      const cells = tickets.forEach((a, field) =>
+        create("td", {
+          innerHTML: a.data()[field],
+          className: "text-center",
+        })
+      );
+
+      cells.splice(1, 0);
+      row.append(...cells);
+      return row;
+
+      console.log(row);
+    })
+  );
+  //debugger;
   // thead += `<tr>
   // <th><span class="text-center">Status</span></th>
   // <th><span class="ref">Reference</span></th>
@@ -89,32 +101,28 @@ async function ticketRef(db) {
   // <th><span class="created">Created</span></th>
   // <th><span class="name">Name</span></th>
   // <th><span class="email">Email</span></th></tr>`;
+  //<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
 
-  let table = "<table>";
-  tickets.forEach((a) => {
-    table = table + `<tr>`;
-    table = table + `<td class ="text-center">${a.data().Status}</td>`;
-    table =
-      table +
-      `<td class ="text-center"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">${a.id}</td>`;
-    table = table + `<td class ="text-center">${a.data().ticketTitle}</td>`;
-    table = table + `<td class ="text-center">${a.data().Priority}</td>`;
-    table = table + `<td class ="text-center">${a.data().Created}</td>`;
-    table = table + `<td class ="text-center">${a.data().Name}</td>`;
-    table = table + `<td class ="text-center">${a.data().Email}</td>`;
-    table = table + `<td class ="text-center">${a.data().Assignee}</td>`;
-    table += `</tr>`;
-  });
+  // let table = "<table>";
+  // tickets.forEach((a) => {
+  //   table += `<tr>`;
+  //   table += `<td class ="text-center">${a.data().Status}</td>`;
+  //   table += `<td class ="text-center"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>`;
+  //   table += `<td class ="text-center">${a.id}</td>`;
+  //   table += `<td class ="text-center">${a.data().ticketTitle}</td>`;
+  //   table += `<td class ="text-center">${a.data().Priority}</td>`;
+  //   table += `<td class ="text-center">${a.data().Created}</td>`;
+  //   table += `<td class ="text-center">${a.data().Name}</td>`;
+  //   table += `<td class ="text-center">${a.data().Email}</td>`;
+  //   table += `<td class ="text-center">${a.data().Assignee}</td>`;
+  //   table += `</tr>`;
+  // });
 
-  table += "</table>";
-  //const tableJoined = thead + table;
-  tableData.setAttribute("class", "table table-dark table-hover rounded-3");
-  tableData.setAttribute("id", "myTable");
-  tableData.innerHTML = table;
-
-  // document
-  //   .getElementById("countriesDropdown")
-  //   .addEventListener("change", "filterTable");
+  // table += "</table>";
+  // //const tableJoined = thead + table;
+  // tableData.setAttribute("class", "table table-dark table-hover rounded-3");
+  // tableData.setAttribute("id", "myTable");
+  // tableData.innerHTML = table;
 
   // tableData.innerHTML = tickets
   //   ? tickets
@@ -246,15 +254,21 @@ async function ticketRef(db) {
     // get a reference to the document
     let docRef = doc(rootRef, deleteTicketEntry.value);
 
-    //delete the document
+    let docs = tickets.map((a) => a.id);
 
-    deleteDoc(docRef)
-      .then(() => {
-        alert("The document has been deleted successfully");
-      })
-      .catch(() => {
-        alert("Unsuccessful operation: " + error);
-      });
+    if (docs.length >= 1) {
+      //deleteDoc(docRef).map((a) => a.id);
+      docRef.length;
+    }
+
+    // //delete the document
+    // deleteDoc(docRef)
+    // .then(() => {
+    //   alert("The document has been deleted successfully");
+    // })
+    // .catch(() => {
+    //   alert("Unsuccessful operation: " + error);
+    // });
   });
 
   const updateTicketForm = document.getElementById("updtticketForm");
@@ -283,7 +297,7 @@ async function ticketRef(db) {
       Developer: document.querySelector("#updtAssignee").value,
     })
       .then(() => {
-        alert("The document has been deleted successfully");
+        alert("The document has been updated successfully");
         updateTicketForm.reset();
         //location.reload();
       })
@@ -360,6 +374,7 @@ async function ticketRef(db) {
 
         for (let j = 0; j < tdArray.length; j++) {
           const cellValue = tdArray[j];
+
           if (
             cellValue &&
             cellValue.innerHTML.toLowerCase().indexOf(filter) > -1
@@ -378,31 +393,71 @@ async function ticketRef(db) {
   // Step 5. Submit this list to your back-end
   // Step 6. Delete the submitted ids.
 
-  let checkBox = document.getElementById("flexCheckDefault");
-  const checkBoxRef = tickets.map((a) => a.id);
+  //const checkBoxRef = tickets.map((a) => a.id);
 
-  console.log(checkBoxRef);
+  const delMultipleDocs = document.querySelector("#delMultipleDocs");
+  let delMultipleBtn = document.querySelector("#deleteMultipleDocs");
 
-  // delBtn.addEventListener("click", async (e) => {
-  //   e.preventDefault();
+  let checkbox = document.getElementById("flexCheckDefault");
 
-  //   //query the database for the ticket id
-  //   let r = await getDoc(doc(db, "Ticket-table/", deleteTicketEntry.value));
-  //   //get root reference
-  //   let rootRef = collection(db, "Ticket-table");
-  //   // get a reference to the document
-  //   let docRef = doc(rootRef, deleteTicketEntry.value);
+  let tableEl, tr, td;
+  tableEl = document.getElementById("myTable");
+  td = tableEl.getElementsByTagName("td");
+  tr = tableEl.getElementsByTagName("tr");
+  //const table = document.querySelector("table");
+  let tds = document.querySelectorAll("td");
 
-  //   //delete the document
+  document.addEventListener("change", function (e) {
+    if (e.target && e.target.id == "flexCheckDefault") {
+      if (checkbox) {
+        console.log("Checkbox is checked..");
 
-  //   deleteDoc(docRef)
-  //     .then(() => {
-  //       alert("The document has been deleted successfully");
-  //     })
-  //     .catch(() => {
-  //       alert("Unsuccessful operation: " + error);
-  //     });
+        let tableEl, tr;
+        tableEl = document.getElementById("myTable");
+        tr = tableEl.getElementsByTagName("tr");
+        const table = document.querySelector("table");
+
+        for (let i = 0; i < tr.length; i++) {
+          let tdArray = tr[i].getElementsByTagName("td")[2].textContent;
+
+          //let cellValue = tdArray[i];
+
+          console.log(tdArray);
+        }
+      }
+    }
+  });
+  // checkbox.addEventListener("change", function () {
+  //   if (checkbox) {
+  //     console.log("Checkbox is checked..");
+
+  //     }
+  //   } else {
+  //     console.log("Checkbox is not checked..");
+  //   }
   // });
+
+  delMultipleBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    // Get a new write batch
+    const batch = writeBatch(db);
+    //query the database for the ticket id
+    let r = await getDoc(doc(db, "Ticket-table/", delMultipleDocs.value));
+    //get root reference
+    let rootRef = collection(db, "Ticket-table");
+    // get a reference to the document
+    let docRef = doc(rootRef, delMultipleDocs.value);
+
+    //delete the document
+    batch
+      .delete(docRef)
+      .then(() => {
+        alert("The document has been deleted successfully");
+      })
+      .catch(() => {
+        alert("Unsuccessful operation: " + error);
+      });
+  });
 }
 ticketRef(db);
 
