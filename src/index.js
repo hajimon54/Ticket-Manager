@@ -53,46 +53,47 @@ async function ticketRef(db) {
     tickets.push(doc);
   });
 
-  console.log(tickets);
+  //console.log(tickets);
 
-  const table = document.getElementById("tableData");
+  //const tableD = document.getElementById("tableData");
 
-  const create = (tag = "div", options = {}) =>
-    Object.assign(document.createElement(tag), options);
+  // const create = (tag = "div", options = {}) =>
+  //   Object.assign(document.createElement(tag), options);
 
-  table.append(
-    ...tickets.map((ticket) => {
-      const row = create("tr");
-      // const checkBoxCell = create("td", { className: "text-center" });
-      // const checkBoxLabel = create("label");
+  // table.append(
+  //   ...tickets.map((ticket) => {
+  //     const row = create("tr");
+  //     // const checkBoxCell = create("td", { className: "text-center" });
+  //     // const checkBoxLabel = create("label");
 
-      // checkBoxLabel.append(
-      //   create("input", {
-      //     type: "checkbox",
-      //     className: "form-check-input", // You were creating duplicate `ids`
-      //   }),
-      //   create("span", { textContent: ticket.id })
-      // );
+  //     // checkBoxLabel.append(
+  //     //   create("input", {
+  //     //     type: "checkbox",
+  //     //     className: "form-check-input", // You were creating duplicate `ids`
+  //     //   }),
+  //     //   create("span", { textContent: ticket.id })
+  //     // );
 
-      // checkBoxCell.append(checkBoxLabel);
+  //     // checkBoxCell.append(checkBoxLabel);
 
-      //console.log(a.data());
+  //     //console.log(a.data());
 
-      const cells = tickets.forEach((a, field) =>
-        create("td", {
-          innerHTML: a.data()[field],
-          className: "text-center",
-        })
-      );
+  //     const cells = tickets.forEach((a, field) =>
+  //       create("td", {
+  //         innerHTML: a.data()[field],
+  //         className: "text-center",
+  //       })
+  //     );
 
-      cells.splice(1, 0);
-      row.append(...cells);
-      return row;
+  //     cells.splice(1, 0);
+  //     row.append(...cells);
+  //     return row;
 
-      console.log(row);
-    })
-  );
+  //     console.log(row);
+  //   })
+  // );
   //debugger;
+
   // thead += `<tr>
   // <th><span class="text-center">Status</span></th>
   // <th><span class="ref">Reference</span></th>
@@ -107,8 +108,8 @@ async function ticketRef(db) {
   // tickets.forEach((a) => {
   //   table += `<tr>`;
   //   table += `<td class ="text-center">${a.data().Status}</td>`;
-  //   table += `<td class ="text-center"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>`;
-  //   table += `<td class ="text-center">${a.id}</td>`;
+  //   table += `<td class ="text-center"> <input class="form-check-input" type="checkbox" value="" id="genId()"></td>`;
+  //   table += `<td class ="text-center" id="docReference" >${a.id}</td>`;
   //   table += `<td class ="text-center">${a.data().ticketTitle}</td>`;
   //   table += `<td class ="text-center">${a.data().Priority}</td>`;
   //   table += `<td class ="text-center">${a.data().Created}</td>`;
@@ -119,28 +120,60 @@ async function ticketRef(db) {
   // });
 
   // table += "</table>";
+
   // //const tableJoined = thead + table;
   // tableData.setAttribute("class", "table table-dark table-hover rounded-3");
   // tableData.setAttribute("id", "myTable");
   // tableData.innerHTML = table;
 
-  // tableData.innerHTML = tickets
-  //   ? tickets
-  //       .map((a) => {
-  //         return `
-  //       <tr>
-  //       <td class ="text-center">${a.data().Status}</td>
-  //       <td class ="text-center">${a.id}</td>
-  //       <td class ="text-center">${a.data().Reference}</td>
-  //       <td class ="text-center">${a.data().ticketTitle}</td>
-  //       <td class ="text-center">${a.data().Priority}</td>
-  //       <td class ="text-center">${a.data().Created}</td>
-  //       <td class ="text-center">${a.data().Name}</td>
-  //       <td class ="text-center">${a.data().Email}</td>
-  //       </tr>`;
-  //       })
-  //       .join("")
-  //   : "";
+  //   So you'll want to hit either a web server endpoint, or a Cloud Function with an HTTP trigger, with the new element added.
+  // This Cloud Function would write the new doc to the database. So it would look like this:
+  //
+  // 1. On your website: Create a new checkbox elem with a new ID... const newId = genId();
+  // 2. Send that new elem to the Cloud Function... await fetch.post(cloudFunctionUrl, { id: newId, ...otherData })
+  // 3. That Cloud Function will have access to the DB, being in the same Firebase project.
+  //    Write to the db, db.set(collectionPath + newId, otherData)
+  // 4. Now you can delete via another API
+
+  let dropDown, tableElement, rows, cells, status, filter;
+  dropDown = document.getElementById("statusDropdown");
+  tableElement = document.getElementById("myTable");
+  //rows = tableEl.getElementsByTagName("tr");
+  filter = dropDown.value;
+
+  // for (const element of tableElement.rows) {
+  //   let newTD = document.createElement("td");
+  //   newTD.textContent = "testing";
+  //   element.append(newTD);
+  // }
+
+  //Loops through rows and hides those with countries that don't match the filter
+  // for (let row of rows) {
+  //   // `for...of` loops through the NodeList
+  //   cells = row.getElementsByTagName("td");
+  //   status = cells[0] || null; // gets the 2nd `td` or nothing
+
+  //   console.log(status);
+  // }
+
+  tableData.innerHTML = tickets
+    ? tickets
+        .map((a) => {
+          return `
+        <tr>
+        <td class ="text-center">${a.data().Status}</td>
+        <td class ="text-center"><input class="form-check-input" type="checkbox" id="docReference"></td>
+        <td class ="text-center"  >${a.id}</td>
+        <td class ="text-center">${a.data().Reference}</td>
+        <td class ="text-center">${a.data().ticketTitle}</td>
+        <td class ="text-center">${a.data().Priority}</td>
+        <td class ="text-center">${a.data().Created}</td>
+        <td class ="text-center">${a.data().Name}</td>
+        <td class ="text-center">${a.data().Email}</td>
+        </tr>`;
+        })
+        .join("")
+    : "";
 
   document.getElementById("submitForm").addEventListener("click", function (e) {
     e.preventDefault();
@@ -164,7 +197,7 @@ async function ticketRef(db) {
       },
       orderBy("Created")
     );
-    console.log(Date());
+    //console.log(Date());
     alert("Your form is submitted successfully");
     document.querySelector("#ticketForm").reset();
   });
@@ -254,21 +287,19 @@ async function ticketRef(db) {
     // get a reference to the document
     let docRef = doc(rootRef, deleteTicketEntry.value);
 
-    let docs = tickets.map((a) => a.id);
+    // if (docs.length >= 1) {
+    //   //deleteDoc(docRef).map((a) => a.id);
+    //   docRef.length;
+    // }
 
-    if (docs.length >= 1) {
-      //deleteDoc(docRef).map((a) => a.id);
-      docRef.length;
-    }
-
-    // //delete the document
-    // deleteDoc(docRef)
-    // .then(() => {
-    //   alert("The document has been deleted successfully");
-    // })
-    // .catch(() => {
-    //   alert("Unsuccessful operation: " + error);
-    // });
+    //delete the document
+    deleteDoc(docRef)
+      .then(() => {
+        alert("The document has been deleted successfully");
+      })
+      .catch(() => {
+        alert("Unsuccessful operation: " + error);
+      });
   });
 
   const updateTicketForm = document.getElementById("updtticketForm");
@@ -395,70 +426,53 @@ async function ticketRef(db) {
 
   //const checkBoxRef = tickets.map((a) => a.id);
 
-  const delMultipleDocs = document.querySelector("#delMultipleDocs");
+  // So you'll want to hit either a web server endpoint, or a Cloud Function with an HTTP trigger,
+  // with the new element added. This Cloud Function would write the new doc to the database. So it would look like this:
+
+  // 1. On your website: Create a new checkbox elem with a new ID... const newId = genId();
+  // 2. Send that new elem to the Cloud Function... await fetch.post(cloudFunctionUrl, { id: newId, ...otherData })
+  // 3. That Cloud Function will have access to the DB, being in the same Firebase project.
+  //    Write to the db, db.set(collectionPath + newId, otherData)
+  // 4. Now you can delete via another API
+
+  // await fetch.post(cloudFunctionUrl, { id: newId, ...otherData });
+
+  // db.set(collectionPath + newId, otherData);
+
   let delMultipleBtn = document.querySelector("#deleteMultipleDocs");
 
-  let checkbox = document.getElementById("flexCheckDefault");
-
-  let tableEl, tr, td;
-  tableEl = document.getElementById("myTable");
-  td = tableEl.getElementsByTagName("td");
-  tr = tableEl.getElementsByTagName("tr");
+  
+ 
   //const table = document.querySelector("table");
-  let tds = document.querySelectorAll("td");
+  let tables = document.getElementById("tableData");
 
-  document.addEventListener("change", function (e) {
-    if (e.target && e.target.id == "flexCheckDefault") {
-      if (checkbox) {
-        console.log("Checkbox is checked..");
+  
+  var checkboxes = document.querySelectorAll('#myTable input[type="checkbox"]');
 
-        let tableEl, tr;
-        tableEl = document.getElementById("myTable");
-        tr = tableEl.getElementsByTagName("tr");
-        const table = document.querySelector("table");
-
-        for (let i = 0; i < tr.length; i++) {
-          let tdArray = tr[i].getElementsByTagName("td")[2].textContent;
-
-          //let cellValue = tdArray[i];
-
-          console.log(tdArray);
-        }
+  checkboxes.forEach(function (checkbox) {
+    checkbox.addEventListener("change", function (e) {
+      if (checkbox.checked) {
+        let classRefAdd = document.getElementById("docReference");
+        classRefAdd.setAttribute("class", "documentReference");
+        console.log(checkbox);
+      } else {
+        let classRefRem = document.getElementById("docReference");
+        classRefRem.classList.remove("documentReference");
+        console.log(checkbox);
       }
-    }
+    });
   });
-  // checkbox.addEventListener("change", function () {
-  //   if (checkbox) {
-  //     console.log("Checkbox is checked..");
 
-  //     }
-  //   } else {
-  //     console.log("Checkbox is not checked..");
-  //   }
-  // });
+  for (const row of tables.rows) {
+    let docReferences = row.cells[2].textContent;
+
+    console.log(docReferences);
+  }
 
   delMultipleBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    // Get a new write batch
-    const batch = writeBatch(db);
-    //query the database for the ticket id
-    let r = await getDoc(doc(db, "Ticket-table/", delMultipleDocs.value));
-    //get root reference
-    let rootRef = collection(db, "Ticket-table");
-    // get a reference to the document
-    let docRef = doc(rootRef, delMultipleDocs.value);
+    e.preventDefault()
+})
 
-    //delete the document
-    batch
-      .delete(docRef)
-      .then(() => {
-        alert("The document has been deleted successfully");
-      })
-      .catch(() => {
-        alert("Unsuccessful operation: " + error);
-      });
-  });
-}
 ticketRef(db);
 
 // function tickets() {
