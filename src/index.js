@@ -55,76 +55,49 @@ async function ticketRef(db) {
 
   //console.log(tickets);
 
-  //const tableD = document.getElementById("tableData");
+  const tableEl = document.getElementById("tableData");
 
-  // const create = (tag = "div", options = {}) =>
-  //   Object.assign(document.createElement(tag), options);
+  const create = (tag = "div", options = {}) =>
+    Object.assign(document.createElement(tag), options);
 
-  // table.append(
-  //   ...tickets.map((ticket) => {
-  //     const row = create("tr");
-  //     // const checkBoxCell = create("td", { className: "text-center" });
-  //     // const checkBoxLabel = create("label");
+  tableEl.append(
+    ...tickets.map((ticket) => {
+      const row = create("tr");
+      const checkBoxCell = create("td", { className: "text-center" });
+      const checkBoxLabel = create("label");
 
-  //     // checkBoxLabel.append(
-  //     //   create("input", {
-  //     //     type: "checkbox",
-  //     //     className: "form-check-input", // You were creating duplicate `ids`
-  //     //   }),
-  //     //   create("span", { textContent: ticket.id })
-  //     // );
+      checkBoxLabel.append(
+        create("input", {
+          type: "checkbox",
+          className: "form-check-input", // You were creating duplicate `ids`
+          name: "selected",
+          value: ticket.id,
+        }),
+        create("span", { textContent: ticket.id })
+      );
 
-  //     // checkBoxCell.append(checkBoxLabel);
+      checkBoxCell.append(checkBoxLabel);
 
-  //     //console.log(a.data());
+      const cells = [
+        "Status",
+        "ticketTitle",
+        "Priority",
+        "Created",
+        "Name",
+        "Email",
+        "Assignee",
+      ].map((field) =>
+        create("td", {
+          textContent: ticket.data()[field],
+          className: "text-center",
+        })
+      );
 
-  //     const cells = tickets.forEach((a, field) =>
-  //       create("td", {
-  //         innerHTML: a.data()[field],
-  //         className: "text-center",
-  //       })
-  //     );
-
-  //     cells.splice(1, 0);
-  //     row.append(...cells);
-  //     return row;
-
-  //     console.log(row);
-  //   })
-  // );
-  //debugger;
-
-  // thead += `<tr>
-  // <th><span class="text-center">Status</span></th>
-  // <th><span class="ref">Reference</span></th>
-  // <th><span class="title">Title</span></th>
-  // <th><span class="priority">Priority</span></th>
-  // <th><span class="created">Created</span></th>
-  // <th><span class="name">Name</span></th>
-  // <th><span class="email">Email</span></th></tr>`;
-  //<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-
-  // let table = "<table>";
-  // tickets.forEach((a) => {
-  //   table += `<tr>`;
-  //   table += `<td class ="text-center">${a.data().Status}</td>`;
-  //   table += `<td class ="text-center"> <input class="form-check-input" type="checkbox" value="" id="genId()"></td>`;
-  //   table += `<td class ="text-center" id="docReference" >${a.id}</td>`;
-  //   table += `<td class ="text-center">${a.data().ticketTitle}</td>`;
-  //   table += `<td class ="text-center">${a.data().Priority}</td>`;
-  //   table += `<td class ="text-center">${a.data().Created}</td>`;
-  //   table += `<td class ="text-center">${a.data().Name}</td>`;
-  //   table += `<td class ="text-center">${a.data().Email}</td>`;
-  //   table += `<td class ="text-center">${a.data().Assignee}</td>`;
-  //   table += `</tr>`;
-  // });
-
-  // table += "</table>";
-
-  // //const tableJoined = thead + table;
-  // tableData.setAttribute("class", "table table-dark table-hover rounded-3");
-  // tableData.setAttribute("id", "myTable");
-  // tableData.innerHTML = table;
+      cells.splice(1, 0, checkBoxCell);
+      row.append(...cells);
+      return row;
+    })
+  );
 
   //   So you'll want to hit either a web server endpoint, or a Cloud Function with an HTTP trigger, with the new element added.
   // This Cloud Function would write the new doc to the database. So it would look like this:
@@ -135,45 +108,25 @@ async function ticketRef(db) {
   //    Write to the db, db.set(collectionPath + newId, otherData)
   // 4. Now you can delete via another API
 
-  let dropDown, tableElement, rows, cells, status, filter;
-  dropDown = document.getElementById("statusDropdown");
-  tableElement = document.getElementById("myTable");
-  //rows = tableEl.getElementsByTagName("tr");
-  filter = dropDown.value;
-
-  // for (const element of tableElement.rows) {
-  //   let newTD = document.createElement("td");
-  //   newTD.textContent = "testing";
-  //   element.append(newTD);
-  // }
-
-  //Loops through rows and hides those with countries that don't match the filter
-  // for (let row of rows) {
-  //   // `for...of` loops through the NodeList
-  //   cells = row.getElementsByTagName("td");
-  //   status = cells[0] || null; // gets the 2nd `td` or nothing
-
-  //   console.log(status);
-  // }
-
-  tableData.innerHTML = tickets
-    ? tickets
-        .map((a) => {
-          return `
-        <tr>
-        <td class ="text-center">${a.data().Status}</td>
-        <td class ="text-center"><input class="form-check-input" type="checkbox" id="docReference"></td>
-        <td class ="text-center"  >${a.id}</td>
-        <td class ="text-center">${a.data().Reference}</td>
-        <td class ="text-center">${a.data().ticketTitle}</td>
-        <td class ="text-center">${a.data().Priority}</td>
-        <td class ="text-center">${a.data().Created}</td>
-        <td class ="text-center">${a.data().Name}</td>
-        <td class ="text-center">${a.data().Email}</td>
-        </tr>`;
-        })
-        .join("")
-    : "";
+  // tableData.innerHTML = tickets
+  //   ? tickets
+  //       .map((a) => {
+  //         return `
+  //       <tr>
+  //       <td class ="text-center">${a.data().Status}</td>
+  //       <td class ="text-center"><input type="checkbox" id="docReference"></td>
+  //       <td class ="text-center" >${a.id}</td>
+  //       <td class ="text-center">${a.data().Reference}</td>
+  //       <td class ="text-center">${a.data().ticketTitle}</td>
+  //       <td class ="text-center">${a.data().Priority}</td>
+  //       <td class ="text-center">${a.data().Created}</td>
+  //       <td class ="text-center">${a.data().Name}</td>
+  //       <td class ="text-center">${a.data().Email}</td>
+  //       </tr>`;
+  //       })
+  //       .join("")
+  //   : "";
+  //<td class ="text-center">${a.data().Reference}</td>
 
   document.getElementById("submitForm").addEventListener("click", function (e) {
     e.preventDefault();
@@ -181,13 +134,11 @@ async function ticketRef(db) {
 
     let m = moment();
     let mFormatted = m.format("dddd, MMMM Do YYYY, h:mm A"); // "2014-09-08T08:02:17-05:00" (ISO 8601, no fractional seconds)
-    console.log(mFormatted);
 
     let r = setDoc(
       doc(db, "Ticket-table/" + Math.random().toString(36).slice(2, 7)),
       {
         Status: document.querySelector("#ticketStatus").value,
-        Reference: document.querySelector("#reference").value,
         ticketTitle: document.querySelector("#ticketTitle").value,
         Priority: document.querySelector("#priority").value,
         Created: new Date().toLocaleString(),
@@ -417,62 +368,30 @@ async function ticketRef(db) {
       }
     });
 
-  // Step 1. Get a list of documents that exist.
-  // Step 2. From that list of documents, transform it to a list if IDs
-  // Step 3. Dynamically create checkboxes based on the number of IDs
-  // Step 4. In an event, get all the IDs that have been checked
-  // Step 5. Submit this list to your back-end
-  // Step 6. Delete the submitted ids.
+  document
+    .querySelector("#ticketManagerTable #deleteMultipleDocs")
+    .addEventListener("click", async (e) => {
+      e.preventDefault();
 
-  //const checkBoxRef = tickets.map((a) => a.id);
+      const data = new FormData(document.querySelector("#ticketManagerTable"));
 
-  // So you'll want to hit either a web server endpoint, or a Cloud Function with an HTTP trigger,
-  // with the new element added. This Cloud Function would write the new doc to the database. So it would look like this:
+      let selectedTickets = data.getAll("selected");
 
-  // 1. On your website: Create a new checkbox elem with a new ID... const newId = genId();
-  // 2. Send that new elem to the Cloud Function... await fetch.post(cloudFunctionUrl, { id: newId, ...otherData })
-  // 3. That Cloud Function will have access to the DB, being in the same Firebase project.
-  //    Write to the db, db.set(collectionPath + newId, otherData)
-  // 4. Now you can delete via another API
+      selectedTickets.forEach((selectedTicket) => {
+        let rootRef = collection(db, "Ticket-table");
+        // get a reference to the document
+        let docRef = doc(rootRef, selectedTicket);
 
-  // await fetch.post(cloudFunctionUrl, { id: newId, ...otherData });
-
-  // db.set(collectionPath + newId, otherData);
-
-  let delMultipleBtn = document.querySelector("#deleteMultipleDocs");
-
-  
- 
-  //const table = document.querySelector("table");
-  let tables = document.getElementById("tableData");
-
-  
-  var checkboxes = document.querySelectorAll('#myTable input[type="checkbox"]');
-
-  checkboxes.forEach(function (checkbox) {
-    checkbox.addEventListener("change", function (e) {
-      if (checkbox.checked) {
-        let classRefAdd = document.getElementById("docReference");
-        classRefAdd.setAttribute("class", "documentReference");
-        console.log(checkbox);
-      } else {
-        let classRefRem = document.getElementById("docReference");
-        classRefRem.classList.remove("documentReference");
-        console.log(checkbox);
-      }
+        deleteDoc(docRef)
+          .then(() => {
+            alert("The document has been deleted successfully");
+          })
+          .catch(() => {
+            alert("Unsuccessful operation: " + error);
+          });
+      });
     });
-  });
-
-  for (const row of tables.rows) {
-    let docReferences = row.cells[2].textContent;
-
-    console.log(docReferences);
-  }
-
-  delMultipleBtn.addEventListener("click", async (e) => {
-    e.preventDefault()
-})
-
+}
 ticketRef(db);
 
 // function tickets() {
