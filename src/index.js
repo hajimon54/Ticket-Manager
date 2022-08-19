@@ -7,6 +7,9 @@ moment().format();
 //import Chart.JS
 import Chart from "chart.js/auto";
 
+//  version of Bootstrap built as ESM (bootstrap.esm.js and bootstrap.esm.min.js)
+//  which allows you to use Bootstrap as a module in your browser
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics, setDefaultEventParameters } from "firebase/analytics";
@@ -28,6 +31,7 @@ import {
 } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
 import { Firestore } from "firebase/firestore";
+//import { compileString } from "sass";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2x9eOF0QlP_GW7RRN0vPH-9RiTpFR3o4",
@@ -61,10 +65,19 @@ async function ticketRef(db) {
     Object.assign(document.createElement(tag), options);
 
   tableEl.append(
-    ...tickets.map((ticket) => {
-      const row = create("tr");
-      const checkBoxCell = create("td", { className: "text-center" });
+    ...tickets.map((ticket, index) => {
+      const row = create("tr", { id: `row${index}` });
+      const checkBoxCell = create("td", {
+        className: "text-center",
+      });
+
+      row.id = `row${index}`;
       const checkBoxLabel = create("label");
+      const viewTicketCell = create("td", {
+        className: "text-center",
+        align: "center",
+      });
+      const viewTicketButton = create("label");
 
       checkBoxLabel.append(
         create("input", {
@@ -76,8 +89,6 @@ async function ticketRef(db) {
         create("span", { textContent: ticket.id })
       );
 
-      checkBoxCell.append(checkBoxLabel);
-
       const cells = [
         "Status",
         "ticketTitle",
@@ -86,6 +97,7 @@ async function ticketRef(db) {
         "Name",
         "Email",
         "Assignee",
+        "View Ticket",
       ].map((field) =>
         create("td", {
           textContent: ticket.data()[field],
@@ -93,20 +105,38 @@ async function ticketRef(db) {
         })
       );
 
+      viewTicketButton.append(
+        create("input", {
+          type: "button",
+          className: "viewTicketDetails btn btn-primary",
+          id: "viewTicketButton",
+          name: "viewTicket",
+          value: "View Ticket",
+          onclick: function () {
+            var myModal = new bootstrap.Modal(
+              document.getElementById("ticketButtonDetails")
+            );
+
+            let div = document.getElementById("mdlStatus");
+
+            div.innerText = cells[0].innerText;
+
+            // myModal.innerText = cells[0].innerText;
+
+            myModal.show();
+          },
+        })
+      );
+
+      checkBoxCell.append(checkBoxLabel),
+        viewTicketCell.append(viewTicketButton);
+
       cells.splice(1, 0, checkBoxCell);
+      cells.splice(9, 0, viewTicketCell);
       row.append(...cells);
       return row;
     })
   );
-
-  //   So you'll want to hit either a web server endpoint, or a Cloud Function with an HTTP trigger, with the new element added.
-  // This Cloud Function would write the new doc to the database. So it would look like this:
-  //
-  // 1. On your website: Create a new checkbox elem with a new ID... const newId = genId();
-  // 2. Send that new elem to the Cloud Function... await fetch.post(cloudFunctionUrl, { id: newId, ...otherData })
-  // 3. That Cloud Function will have access to the DB, being in the same Firebase project.
-  //    Write to the db, db.set(collectionPath + newId, otherData)
-  // 4. Now you can delete via another API
 
   // tableData.innerHTML = tickets
   //   ? tickets
