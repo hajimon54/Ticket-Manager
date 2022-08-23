@@ -223,3 +223,64 @@ span {
   align-items: center;
   flex-direction: column;
 }
+
+.modal-body {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlStatus {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlTitle {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlPriority {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlCreated {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlName {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.modal-body #mdlEmail {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlAssignee {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.modal-body #mdlAssignee {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}

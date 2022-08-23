@@ -115,8 +115,9 @@
           <th><span class="created">Created</span></th>
           <th><span class="name">Name</span></th>
           <th><span class="email">Email</span></th>
-          <th><span class="created">Assignee</span></th>
-          <th><span class="created">View Ticket</span></th>
+          <th><span class="Assignee">Assignee</span></th>
+          <th><span class="Comments">Comments</span></th>
+          <th><span class="viewTicket">View Ticket</span></th>
         </tr>
       </thead> 
     </div>
@@ -296,10 +297,35 @@
         <h5 class="modal-title" id="exampleModalLabel">Ticket Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="post" id="ticketForm">
+      <form method="post" id="mdlTicketForm">
       <div class="modal-body">
-        <div id="mdlStatus"></div>
+              <div class="modalStatus">
+                <div id="mdlStatus"></div>
+              </div>
+              <div class="modalTitle">
+                <div id="mdlTitle"></div>
+              </div>
+              <div class="modalPriority">
+                <div id="mdlPriority"></div>
+              </div>
+              <div class="modalCreated">
+                <div id="mdlCreated"></div>
+              </div>
+              <div class="modalName">
+                <div id="mdlName"></div>
+              </div>
+              <div class="modalEmail">
+                <div id="mdlEmail"></div>
+              </div>
+              <div class="modalAssignee">
+                <div id="mdlAssignee"></div> 
+              </div>
+              <div class="modalCommentsBox">
+                <div id="mdlCommentsBox"></div> 
+              </div>
+              
       </div>
+      
     </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -421,7 +447,12 @@
                 placeholder="Enter assignee here..."
               />
             </div>
-            </form>
+            <div class="mdlComments">
+            <textarea id="mdlCommentBox" rows="4" cols="50" name="comment" form="usrform">
+              Enter text here...
+            </textarea>
+          </div>
+           
           </div>
           <div class="modal-footer">
             <button
@@ -433,6 +464,7 @@
             <button name="submitForm" id="submitForm"  type="button" class="btn btn-primary">Submit ticket</button>
           </div>
         </div>
+      </form>
       </div>
     </div>
     

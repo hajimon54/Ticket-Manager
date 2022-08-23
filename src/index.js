@@ -29,9 +29,6 @@ import {
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
-import { getDatabase } from "firebase/database";
-import { Firestore } from "firebase/firestore";
-//import { compileString } from "sass";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2x9eOF0QlP_GW7RRN0vPH-9RiTpFR3o4",
@@ -43,13 +40,29 @@ const firebaseConfig = {
   measurementId: "G-7077X5Y5YP",
 };
 
+const secondaryAppConfig = initializeApp(
+  {
+    apiKey: "AIzaSyC0ml74-SAMEKp37DeSMI8_qLV6SvQoUdo",
+    authDomain: "comments-db-d0a5e.firebaseapp.com",
+    projectId: "comments-db-d0a5e",
+    storageBucket: "comments-db-d0a5e.appspot.com",
+    messagingSenderId: "457920984200",
+    appId: "1:457920984200:web:754f6660db252458281b3d",
+    measurementId: "G-NLJJDYC9YW",
+  },
+  "secondaryAppConfig"
+);
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+const commsDB = getFirestore(secondaryAppConfig);
 
-async function ticketRef(db) {
+async function ticketRef(db, commsDB) {
   let r = await getDocs(collection(db, "Ticket-table"));
+  let commentsDB = await getDocs(collection(commsDB, "Comments-Box"));
   let tableData = document.getElementById("tableData");
 
   let tickets = [];
@@ -57,7 +70,10 @@ async function ticketRef(db) {
     tickets.push(doc);
   });
 
-  //console.log(tickets);
+  let commentsDbArr = [];
+  commentsDB.forEach((comm) => {
+    commentsDbArr.push(comm);
+  });
 
   const tableEl = document.getElementById("tableData");
 
@@ -67,17 +83,18 @@ async function ticketRef(db) {
   tableEl.append(
     ...tickets.map((ticket, index) => {
       const row = create("tr", { id: `row${index}` });
+
       const checkBoxCell = create("td", {
         className: "text-center",
       });
-
-      row.id = `row${index}`;
       const checkBoxLabel = create("label");
       const viewTicketCell = create("td", {
         className: "text-center",
         align: "center",
       });
       const viewTicketButton = create("label");
+
+      row.id = `row${index}`;
 
       checkBoxLabel.append(
         create("input", {
@@ -94,10 +111,9 @@ async function ticketRef(db) {
         "ticketTitle",
         "Priority",
         "Created",
-        "Name",
+        "fullName",
         "Email",
         "Assignee",
-        "View Ticket",
       ].map((field) =>
         create("td", {
           textContent: ticket.data()[field],
@@ -117,11 +133,21 @@ async function ticketRef(db) {
               document.getElementById("ticketButtonDetails")
             );
 
-            let div = document.getElementById("mdlStatus");
+            let divStatus = document.getElementById("mdlStatus");
+            let divTitle = document.getElementById("mdlTitle");
+            let divPriority = document.getElementById("mdlPriority");
+            let divCreated = document.getElementById("mdlCreated");
+            let divName = document.getElementById("mdlName");
+            let divEmail = document.getElementById("mdlEmail");
+            let divAssignee = document.getElementById("mdlAssignee");
 
-            div.innerText = cells[0].innerText;
-
-            // myModal.innerText = cells[0].innerText;
+            divStatus.innerText = cells[0].innerText;
+            divTitle.innerText = cells[2].innerText;
+            divPriority.innerText = cells[3].innerText;
+            divCreated.innerText = cells[4].innerText;
+            divName.innerText = cells[5].innerText;
+            divEmail.innerText = cells[6].innerText;
+            divAssignee.innerText = cells[7].innerText;
 
             myModal.show();
           },
@@ -135,6 +161,22 @@ async function ticketRef(db) {
       cells.splice(9, 0, viewTicketCell);
       row.append(...cells);
       return row;
+    }),
+
+    commentsDbArr.map((comments, index) => {
+      const row = create("tr", { id: `row${index}` });
+      row.id = `row${index}`;
+
+      const commentCell = ["Comments"].map((field) =>
+        create("td", {
+          textContent: comments.data()[field],
+          className: "text-center",
+        })
+      );
+
+      let divmodalCommentsBox = document.getElementById("mdlCommentsBox");
+
+      divmodalCommentsBox.innerText = commentCell[0].innerText;
     })
   );
 
@@ -175,6 +217,14 @@ async function ticketRef(db) {
         fullName: document.querySelector("#fullName").value,
         Email: document.querySelector("#emailAddress").value,
         Assignee: document.querySelector("#Assignee").value,
+      },
+      orderBy("Created")
+    );
+
+    let a = setDoc(
+      doc(commsDB, "Comments-Box/" + Math.random().toString(36).slice(2, 7)),
+      {
+        Comments: document.querySelector("#mdlCommentBox").value,
       },
       orderBy("Created")
     );
@@ -268,11 +318,6 @@ async function ticketRef(db) {
     // get a reference to the document
     let docRef = doc(rootRef, deleteTicketEntry.value);
 
-    // if (docs.length >= 1) {
-    //   //deleteDoc(docRef).map((a) => a.id);
-    //   docRef.length;
-    // }
-
     //delete the document
     deleteDoc(docRef)
       .then(() => {
@@ -311,7 +356,6 @@ async function ticketRef(db) {
       .then(() => {
         alert("The document has been updated successfully");
         updateTicketForm.reset();
-        //location.reload();
       })
       .catch(() => {
         alert("Unsuccessful operation: " + error);
@@ -422,7 +466,7 @@ async function ticketRef(db) {
       });
     });
 }
-ticketRef(db);
+ticketRef(db, commsDB);
 
 // function tickets() {
 //   let tableData = document.querySelector("#tableData");
