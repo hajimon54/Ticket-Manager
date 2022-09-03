@@ -13,13 +13,14 @@
   "devDependencies": {
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "css-loader": "^6.7.1",
+    "path-browserify": "^1.0.1",
     "postcss": "^8.4.14",
     "postcss-loader": "^7.0.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2",
     "source-map-loader": "^1.0.0",
     "style-loader": "^3.3.1",
-    "webpack": "^5.73.0",
+    "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {

@@ -116,18 +116,25 @@
           <th><span class="name">Name</span></th>
           <th><span class="email">Email</span></th>
           <th><span class="Assignee">Assignee</span></th>
-          <th><span class="Comments">Comments</span></th>
           <th><span class="viewTicket">View Ticket</span></th>
         </tr>
       </thead> 
     </div>
       <tbody id="tableData"></tbody>
     </table> 
+
+
+
+
+
     <div class="button-group">
       <!-- Button trigger modal adding new ticket-->
       <button type="button" class=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         Submit New Ticket
       </button>
+
+
+      
   
       <!-- Button trigger modal deleting ticket-->
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropDelBtn">
@@ -323,16 +330,66 @@
               <div class="modalCommentsBox">
                 <div id="mdlCommentsBox"></div> 
               </div>
-              
       </div>
       
     </form>
       <div class="modal-footer">
+        <!-- Button trigger modal adding new comment to modal-->
+      <button type="button" class=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropCommentForm">
+        Add new comment
+      </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
+</div>
+
+
+ <!-- Modal -->
+ <div
+ class="modal fade"
+ id="staticBackdropCommentForm"
+ data-bs-backdrop="static"
+ data-bs-keyboard="false"
+ tabindex="-1"
+ aria-labelledby="staticBackdropLabel"
+ aria-hidden="true"
+>
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title" id="staticBackdropLabel">
+         Add New Comment
+       </h5>
+       <button
+         type="button"
+         class="btn-close"
+         data-bs-dismiss="modal"
+         aria-label="Close"
+       ></button>
+     </div>
+     <div class="modal-body">
+       <form method="post" id="addNewCommentForm">
+       <div class="mdlComments">
+       <textarea id="mdlCommentBox" rows="4" cols="50" name="comment" form="usrform">
+         Enter text here...
+       </textarea>
+     </div>
+      
+     </div>
+     <div class="modal-footer">
+       <button
+         type="button"
+         class="btn btn-secondary"
+         data-bs-dismiss="modal">
+         Close
+       </button>
+       <button name="submitForm" id="submitNewCommentForm"  type="button" class="btn btn-primary">Submit ticket</button>
+     </div>
+   </div>
+ </form>
+ </div>
 </div>
 
     <!-- Modal -->
@@ -446,13 +503,7 @@
                 for="html"
                 placeholder="Enter assignee here..."
               />
-            </div>
-            <div class="mdlComments">
-            <textarea id="mdlCommentBox" rows="4" cols="50" name="comment" form="usrform">
-              Enter text here...
-            </textarea>
-          </div>
-           
+              </div>
           </div>
           <div class="modal-footer">
             <button

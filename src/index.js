@@ -4,7 +4,7 @@ import "./styles/style.scss";
 import moment from "moment";
 moment().format();
 
-//import Chart.JS
+// import Chart.JS
 import Chart from "chart.js/auto";
 
 //  version of Bootstrap built as ESM (bootstrap.esm.js and bootstrap.esm.min.js)
@@ -12,10 +12,7 @@ import Chart from "chart.js/auto";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, setDefaultEventParameters } from "firebase/analytics";
 import {
-  arrayRemove,
-  DocumentSnapshot,
   getFirestore,
   collection,
   doc,
@@ -25,9 +22,6 @@ import {
   deleteDoc,
   updateDoc,
   orderBy,
-  writeBatch,
-  serverTimestamp,
-  Timestamp,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -84,6 +78,8 @@ async function ticketRef(db, commsDB) {
     ...tickets.map((ticket, index) => {
       const row = create("tr", { id: `row${index}` });
 
+      row.id = `row${index}`;
+
       const checkBoxCell = create("td", {
         className: "text-center",
       });
@@ -93,8 +89,6 @@ async function ticketRef(db, commsDB) {
         align: "center",
       });
       const viewTicketButton = create("label");
-
-      row.id = `row${index}`;
 
       checkBoxLabel.append(
         create("input", {
@@ -140,6 +134,7 @@ async function ticketRef(db, commsDB) {
             let divName = document.getElementById("mdlName");
             let divEmail = document.getElementById("mdlEmail");
             let divAssignee = document.getElementById("mdlAssignee");
+            let divMdlCommentsBox = document.getElementById("mdlCommentsBox");
 
             divStatus.innerText = cells[0].innerText;
             divTitle.innerText = cells[2].innerText;
@@ -161,22 +156,6 @@ async function ticketRef(db, commsDB) {
       cells.splice(9, 0, viewTicketCell);
       row.append(...cells);
       return row;
-    }),
-
-    commentsDbArr.map((comments, index) => {
-      const row = create("tr", { id: `row${index}` });
-      row.id = `row${index}`;
-
-      const commentCell = ["Comments"].map((field) =>
-        create("td", {
-          textContent: comments.data()[field],
-          className: "text-center",
-        })
-      );
-
-      let divmodalCommentsBox = document.getElementById("mdlCommentsBox");
-
-      divmodalCommentsBox.innerText = commentCell[0].innerText;
     })
   );
 
@@ -204,8 +183,8 @@ async function ticketRef(db, commsDB) {
     e.preventDefault();
     const docReferenceInput = document.querySelector("#docReference");
 
-    let m = moment();
-    let mFormatted = m.format("dddd, MMMM Do YYYY, h:mm A"); // "2014-09-08T08:02:17-05:00" (ISO 8601, no fractional seconds)
+    //let m = moment();
+    //let mFormatted = m.format("dddd, MMMM Do YYYY, h:mm A"); // "2014-09-08T08:02:17-05:00" (ISO 8601, no fractional seconds)
 
     let r = setDoc(
       doc(db, "Ticket-table/" + Math.random().toString(36).slice(2, 7)),
@@ -221,17 +200,28 @@ async function ticketRef(db, commsDB) {
       orderBy("Created")
     );
 
-    let a = setDoc(
-      doc(commsDB, "Comments-Box/" + Math.random().toString(36).slice(2, 7)),
-      {
-        Comments: document.querySelector("#mdlCommentBox").value,
-      },
-      orderBy("Created")
-    );
-    //console.log(Date());
     alert("Your form is submitted successfully");
     document.querySelector("#ticketForm").reset();
   });
+
+  document
+    .getElementById("submitNewCommentForm")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+
+      let a = setDoc(
+        doc(commsDB, "Comments-Box/" + Math.random().toString(36).slice(2, 7)),
+        {
+          Comments: document.querySelector("#mdlCommentBox").value,
+        },
+        orderBy("Created")
+      );
+
+      let linkedID = a + tableEl.getAttribute(`id = ${tableEl.forEach()}`);
+
+      alert("Your form is submitted successfully");
+      document.querySelector("#addNewCommentForm").reset();
+    });
 
   let openStatusCounter = tickets.filter(
     (a) => a.data().Status === "Open"
@@ -329,11 +319,6 @@ async function ticketRef(db, commsDB) {
   });
 
   const updateTicketForm = document.getElementById("updtticketForm");
-  const updateTicketStatus = document.querySelector("#tktStatus");
-  const updateTicketTitle = document.querySelector("#ticketTitle");
-  const updateTicketPriority = document.querySelector("#ticketPriority");
-  const updateTicketName = document.querySelector("#ticketName");
-  const updateTicketEmailAddress = document.querySelector("#emailAddress");
   const updateTicketReference = document.querySelector("#updtTktReference");
 
   document.getElementById("updtBtn").addEventListener("click", function (e) {
