@@ -242,10 +242,20 @@ span {
   flex-direction: column;
 }
 
-.modal-body {
+.modalCommentsBox {
   display: flex;
   justify-content: space-between;
   text-align: center;
+  height: 400px;
+}
+
+.modal-body-comments {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-body-comments #mdlCommentBox {
+  margin: 20px;
 }
 
 .modal-body #mdlStatus {

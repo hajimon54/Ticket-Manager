@@ -24,6 +24,8 @@ import {
   orderBy,
 } from "firebase/firestore";
 
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD2x9eOF0QlP_GW7RRN0vPH-9RiTpFR3o4",
   authDomain: "ticket-table.firebaseapp.com",
@@ -54,10 +56,15 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const commsDB = getFirestore(secondaryAppConfig);
 
-async function ticketRef(db, commsDB) {
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+
+async function ticketRef(auth, db, commsDB) {
   let r = await getDocs(collection(db, "Ticket-table"));
   let commentsDB = await getDocs(collection(commsDB, "Comments-Box"));
   let tableData = document.getElementById("tableData");
+  let loginPage = document.getElementById("staticBackdropLoginForm");
+  open(loginPage);
 
   let tickets = [];
   r.forEach((doc) => {
@@ -134,7 +141,6 @@ async function ticketRef(db, commsDB) {
             let divName = document.getElementById("mdlName");
             let divEmail = document.getElementById("mdlEmail");
             let divAssignee = document.getElementById("mdlAssignee");
-            let divMdlCommentsBox = document.getElementById("mdlCommentsBox");
 
             divStatus.innerText = cells[0].innerText;
             divTitle.innerText = cells[2].innerText;
@@ -158,6 +164,20 @@ async function ticketRef(db, commsDB) {
       return row;
     })
   );
+
+  function comments(commsdb) {
+    // commsdb.forEach((eachComment) => {
+    //   console.log(eachComment.innerText);
+    // });
+    // Object.values(commsdb).forEach((el) => {
+    //   console.log(el.textContent);
+    // });
+    // const docRef = doc(commsdb, "Comments-Box");
+    // let divMdlCommentsBox = document.getElementById("mdlCommentsBox");
+    // divMdlCommentsBox.innerText = eachComment;
+  }
+
+  comments(commentsDbArr);
 
   // tableData.innerHTML = tickets
   //   ? tickets
@@ -183,9 +203,6 @@ async function ticketRef(db, commsDB) {
     e.preventDefault();
     const docReferenceInput = document.querySelector("#docReference");
 
-    //let m = moment();
-    //let mFormatted = m.format("dddd, MMMM Do YYYY, h:mm A"); // "2014-09-08T08:02:17-05:00" (ISO 8601, no fractional seconds)
-
     let r = setDoc(
       doc(db, "Ticket-table/" + Math.random().toString(36).slice(2, 7)),
       {
@@ -204,20 +221,24 @@ async function ticketRef(db, commsDB) {
     document.querySelector("#ticketForm").reset();
   });
 
+  let commentsBoxText = document.getElementById("mdlCommentBox");
+
   document
     .getElementById("submitNewCommentForm")
     .addEventListener("click", function (e) {
       e.preventDefault();
 
-      let a = setDoc(
-        doc(commsDB, "Comments-Box/" + Math.random().toString(36).slice(2, 7)),
+      let rootRef = collection(commsDB, "Comments-Box/");
+
+      let docRef = doc(rootRef, commentsBoxText.value);
+
+      let a = updateDoc(
+        doc(docRef, "Comments-Box/" + Math.random().toString(36).slice(2, 7)),
         {
           Comments: document.querySelector("#mdlCommentBox").value,
         },
         orderBy("Created")
       );
-
-      let linkedID = a + tableEl.getAttribute(`id = ${tableEl.forEach()}`);
 
       alert("Your form is submitted successfully");
       document.querySelector("#addNewCommentForm").reset();
@@ -450,7 +471,47 @@ async function ticketRef(db, commsDB) {
           });
       });
     });
+
+  //Signup button
+  const signupButton = document.querySelector("#sign-inButton");
+  signupButton.addEventListener("submit", (e) => e.preventDefault);
+
+  //get user information
+  const email = document.querySelector("#signup-Email").value;
+  const password = document.querySelector("#signup-Password").value;
+
+  //sign up the user
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      let user = userCredential.user;
+
+      createUserInFirestore(user.uid, email);
+    })
+    .then(() => {
+      // User data added to firestore succcessfully
+      console.log("User added to firestore");
+    })
+    .catch((error) => {
+      console.log("Error adding user to firestore:", error);
+    });
+
+  function createUserInFirestore(userId, email) {
+    const usersCollection = collection(db, "Ticket-table");
+    const userData = {
+      userId: userId,
+      email: email,
+    };
+
+    usersCollection
+      .doc(userId)
+      .set(userData)
+      .then(() => {
+        console.log("user data added to firestore");
+      });
+  }
 }
+
 ticketRef(db, commsDB);
 
 // function tickets() {
