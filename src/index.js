@@ -510,6 +510,8 @@ async function ticketRef(auth, db, commsDB) {
         console.log("user data added to firestore");
       });
   }
+
+  //TEST COMMIT
 }
 
 ticketRef(db, commsDB);
