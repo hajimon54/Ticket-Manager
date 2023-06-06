@@ -511,7 +511,49 @@ async function ticketRef(auth, db, commsDB) {
       });
   }
 
-  //TEST COMMIT
+  // Get references to the modal elements
+  const modal1 = document.getElementById("staticBackdropLoginForm");
+  const modal2 = document.getElementById("staticBackdropSign-upForm");
+
+  // Function to open a modal
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "block";
+  }
+
+  // Function to close a modal
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "none";
+  }
+
+  // Event listener for opening modal 1
+  document
+    .getElementById("staticBackdropSign-upForm")
+    .addEventListener("click", function () {
+      openModal("modal2");
+    });
+
+  // Event listener for opening modal 2
+  // document
+  //   .getElementById("openModal2Button")
+  //   .addEventListener("click", function () {
+  //     openModal("modal2");
+  //   });
+
+  // Event listener for closing modal 1
+  // document
+  //   .getElementById("closeModal1Button")
+  //   .addEventListener("click", function () {
+  //     closeModal("modal1");
+  //   });
+
+  // Event listener for closing modal 2
+  document
+    .getElementById("closeModal2Button")
+    .addEventListener("click", function () {
+      closeModal("modal2");
+    });
 }
 
 ticketRef(db, commsDB);
