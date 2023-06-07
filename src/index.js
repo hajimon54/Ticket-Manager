@@ -59,7 +59,7 @@ const commsDB = getFirestore(secondaryAppConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
-async function ticketRef(auth, db, commsDB) {
+async function ticketRef(db, commsDB) {
   let r = await getDocs(collection(db, "Ticket-table"));
   let commentsDB = await getDocs(collection(commsDB, "Comments-Box"));
   let tableData = document.getElementById("tableData");
@@ -473,43 +473,43 @@ async function ticketRef(auth, db, commsDB) {
     });
 
   //Signup button
-  const signupButton = document.querySelector("#sign-inButton");
-  signupButton.addEventListener("submit", (e) => e.preventDefault);
+  const signupButton = document.querySelector("#createAccountButton");
+  signupButton.addEventListener("click", (e) => console.log("Hello"));
 
   //get user information
   const email = document.querySelector("#signup-Email").value;
   const password = document.querySelector("#signup-Password").value;
 
   //sign up the user
-  auth
-    .createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      let user = userCredential.user;
+  // auth
+  //   .createUserWithEmailAndPassword(email, password)
+  //   .then((userCredential) => {
+  //     let user = userCredential.user;
 
-      createUserInFirestore(user.uid, email);
-    })
-    .then(() => {
-      // User data added to firestore succcessfully
-      console.log("User added to firestore");
-    })
-    .catch((error) => {
-      console.log("Error adding user to firestore:", error);
-    });
+  //     createUserInFirestore(user.uid, email);
+  //   })
+  //   .then(() => {
+  //     // User data added to firestore succcessfully
+  //     console.log("User added to firestore");
+  //   })
+  //   .catch((error) => {
+  //     console.log("Error adding user to firestore:", error);
+  //   });
 
-  function createUserInFirestore(userId, email) {
-    const usersCollection = collection(db, "Ticket-table");
-    const userData = {
-      userId: userId,
-      email: email,
-    };
+  // function createUserInFirestore(userId, email) {
+  //   const usersCollection = collection(db, "Ticket-table");
+  //   const userData = {
+  //     userId: userId,
+  //     email: email,
+  //   };
 
-    usersCollection
-      .doc(userId)
-      .set(userData)
-      .then(() => {
-        console.log("user data added to firestore");
-      });
-  }
+  //   usersCollection
+  //     .doc(userId)
+  //     .set(userData)
+  //     .then(() => {
+  //       console.log("user data added to firestore");
+  //     });
+  // }
 }
 
 ticketRef(db, commsDB);
