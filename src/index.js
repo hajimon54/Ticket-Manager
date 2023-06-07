@@ -1,9 +1,5 @@
 import "./styles/style.scss";
 
-//import moment
-import moment from "moment";
-moment().format();
-
 // import Chart.JS
 import Chart from "chart.js/auto";
 
